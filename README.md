@@ -54,11 +54,7 @@ python proximity_warning.py --conn1 <conn1_str> --conn2 <conn2_str> --hthresh <m
 
 ## Example:
 
-`python proximity_warning.py`
-`  --conn1 udp:127.0.0.1:14540`
-`  --conn2 udp:127.0.0.1:14541`
-`  --hthresh 20`
-`  --vthresh 10`
+`python proximity_warning.py --conn1 udp:127.0.0.1:14540 --conn2 udp:127.0.0.1:14541 --hthresh 20 --vthresh 10`
 
 ## Mode Change Behavior
 
