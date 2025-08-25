@@ -32,7 +32,7 @@ If both the horizontal distance (H) and vertical distance (V) fall below defined
 
 ## Usage
 
-## Default Mode
+### Default Mode
 
 If you want to run with default settings:
 
