@@ -60,7 +60,7 @@ python proximity_warning.py --conn1 <conn1_str> --conn2 <conn2_str> --hthresh <m
 
 When both drones are within thresholds:
 
-- A [WARNING] message is printed.
+- A `[WARNING]` message is printed.
 
 - The script sends a set_mode_send() command to switch drones into Loiter/Hold mode:
 
