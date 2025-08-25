@@ -23,11 +23,11 @@ If both the horizontal distance (H) and vertical distance (V) fall below defined
 ## Requirements
 
 - Python 3.7+
-- `pymavlink`
+- pymavlink
 
 ## Install Dependencies
 
-- pip install pymavlink
+- `pip install pymavlink`
 
 
 ## Usage
@@ -36,9 +36,9 @@ If both the horizontal distance (H) and vertical distance (V) fall below defined
 
 - Runs with built-in defaults:
 
-- Drone 1: udp:127.0.0.1:14540
+- Drone 1: `udp:127.0.0.1:14540`
 
-- Drone 2: udp:127.0.0.1:14541
+- Drone 2: `udp:127.0.0.1:14541`
 
 - Horizontal threshold: 15 m
 
@@ -54,11 +54,11 @@ python proximity_warning.py --conn1 <conn1_str> --conn2 <conn2_str> --hthresh <m
 
 ## Example:
 
-python proximity_warning.py \
-  --conn1 udp:127.0.0.1:14540 \
-  --conn2 udp:127.0.0.1:14541 \
-  --hthresh 20 \
-  --vthresh 10
+`python proximity_warning.py \`
+`  --conn1 udp:127.0.0.1:14540 \`
+`  --conn2 udp:127.0.0.1:14541 \`
+`  --hthresh 20 \`
+`  --vthresh 10`
 
 ## Mode Change Behavior
 
@@ -75,13 +75,12 @@ When both drones are within thresholds:
 - This causes both drones to stop and hold their positions at the point of warning.
 
 ## Example Output
-[INFO] Drone 1 and Drone 2 close (H: 16.50 m), vertical separation safe
-[WARNING] Drone 1 and Drone 2 too close! H: 12.34 m, V: 3.21 m
-[ACTION] Requested Drone 1 to switch to hold mode.
-[ACTION] Requested Drone 2 to switch to hold mode.
-[INFO] Safe. H: 22.45 m, V: 7.12 m
+`[INFO] Drone 1 and Drone 2 close (H: 16.50 m), vertical separation safe`
+`[WARNING] Drone 1 and Drone 2 too close! H: 12.34 m, V: 3.21 m`
+`[ACTION] Requested Drone 1 to switch to hold mode.`
+`[ACTION] Requested Drone 2 to switch to hold mode.`
+`[INFO] Safe. H: 22.45 m, V: 7.12 m`
 
 ## License
 
-This project is released under the MIT License.
-Free to use, modify, and distribute with attribution.
+This project is released under the MIT License. Free to use, modify, and distribute with attribution.
