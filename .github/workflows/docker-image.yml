@@ -2,9 +2,9 @@ name: Docker Build CI
 
 on:
   push:
-    branches: [ "docker-image.yml_patch" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "docker-image.yml_patch" ]
+    branches: [ "master" ]
 
 jobs:
   docker-build:
