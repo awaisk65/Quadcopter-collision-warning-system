@@ -1,18 +1,46 @@
-name: Docker Image CI
+name: Docker Build CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "docker-image.yml_patch" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "docker-image.yml_patch" ]
 
 jobs:
-
-  build:
-
+  docker-build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag proximity_warninig_api:$(date +%s)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: false   # build only, don’t push
+          tags: |
+            proximity_warning_api:latest
+            proximity_warning_api:${{ github.sha }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Test Docker image
+        run: docker run --rm proximity_warning_api:latest echo "✅ Image built and running"
