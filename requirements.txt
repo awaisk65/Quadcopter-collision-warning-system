@@ -1,0 +1,5 @@
+Flask==3.1.2
+marshmallow==4.0.1
+Flask-Cors==6.0.1
+pymavlink==2.4.49
+gunicorn==23.0.0
