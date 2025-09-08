@@ -1,94 +1,90 @@
-# Drone Proximity Warning and Auto-Hold
+# 🚁 Drone Proximity Monitoring API
 
-This project provides a proximity monitoring system for two drones using MAVLink (via pymavlink).  
+This branch provides a Flask-based REST API for monitoring the proximity of two MAVLink-enabled drones.
 It continuously reads GPS and altitude data from both drones, computes horizontal and vertical distances, and raises warnings when thresholds are breached.
 
-If both the horizontal distance (H) and vertical distance (V) fall below defined thresholds, the system automatically requests both drones to switch to Hold/Loiter mode, preventing further approach.
+If both the horizontal distance (H) and vertical distance (V) fall below defined thresholds, the API automatically requests both drones to switch to Hold/Loiter mode, preventing further approach.
 
-## Features
+## ✨ Features
 
-- Connects to two MAVLink-enabled drones via UDP or serial.
-- Reads:
-  - Global GPS position (`GPS_RAW_INT`)
-  - Local position and altitude (`LOCAL_POSITION_NED`)
+- Connects to two MAVLink-enabled drones via UDP or serial
+
+- Exposes REST API to check proximity
+
 - Computes:
-  - Horizontal distance using haversine formula
-  - Vertical distance from local NED altitude
-- Triggers proximity warnings:
-  - **H ≤ Hthresh and V ≤ Vthresh → WARNING**
-- On WARNING:
-  - Requests both drones to switch to Hold/Loiter mode
-- Adjustable thresholds and connection strings via CLI arguments.
+
+ - Horizontal distance (H) via haversine formula
+
+ - Vertical distance (V) via altitude difference
+
+- Returns JSON with status:
+
+ - SAFE if drones are separated
+
+ - DANGER if within thresholds (Loiter/Hold command triggered)
+
+- Deployable via Docker + Docker Compose
+
+- Optional dashboard available at `http://127.0.0.1:8000/api/v1/monitor?conn1=udp:0.0.0.0:14540&conn2=udp:0.0.0.0:14541&hthresh=7&vthresh=5`
 
 ## Requirements
 
-- Python 3.7+
-- pymavlink
+- Docker
+- Docker Compose
 
-## Install Dependencies
+## Install Dependencies (installed in container)
 
-- `pip install pymavlink`
+- `pymavlink`
+
+- `flask`
+
+- `flask-cors`
+
+- `marshmallow`
 
 
 ## Usage
 
-### Default Mode
+### 🚀 Setup with Docker
+### 1. Clone Git Repository
+Clone this repository using:
+- git clone `http://192.168.1.9:3001/awaisk65/NAHL-proximity_warning.git`
+Checkout branch:
+- git checkout 'flask_api'
 
-If you want to run with default settings:
+### 2. Build and Start Docker
+From the project root (where Dockerfile and docker-compose.yml exist):
+- docker compose build
+- docker compose up -d
 
-`python proximity_warning.py`
+This starts the API at:
+`http://127.0.0.1:8000/api/v1/monitor?conn1=udp:0.0.0.0:14540&conn2=udp:0.0.0.0:14541&hthresh=7&vthresh=5`
 
-- This Uses:
+## 🔹 API Endpoints
+### 1. Proximity Check
+**GET** /api/v1/monitor
 
-  - Drone 1: `udp:127.0.0.1:14540`
+Query parameters:
 
-  - Drone 2: `udp:127.0.0.1:14541`
+- `conn1` → Connection string for Drone 1 (e.g., `udp:0.0.0.0:14540`)
 
-  - Horizontal threshold: 15 m
+- `conn2` → Connection string for Drone 2 (e.g., `udp:0.0.0.0:14541`)
 
-  - Vertical threshold: 5 m
+- `hthresh` → Horizontal threshold (meters)
 
-## Custom Mode
+- `vthresh` → Vertical threshold (meters)
 
-Manually provide connection strings and thresholds via CLI arguments:
+Example:
 
-`python proximity_warning.py --conn1 <conn1_str> --conn2 <conn2_str> --hthresh <meters> --vthresh <meters>`
+`curl "http://127.0.0.1:8000/api/v1/monitor?conn1=udp:0.0.0.0:14540&conn2=udp:0.0.0.0:14541&hthresh=7&vthresh=5"`
 
-## Example:
-
-`python proximity_warning.py --conn1 udp:127.0.0.1:14540 --conn2 udp:127.0.0.1:14541 --hthresh 20 --vthresh 10`
-
-## Mode Change Behavior
-
-When both drones are within thresholds:
-
-- A `[WARNING]` message is printed.
-
-- The script sends a set_mode_send() command to switch drones into Loiter/Hold mode:
-
-  - PX4: Loiter (5)
-
-  - ArduPilot: Loiter (5)
-
-- This causes both drones to stop and hold their positions at the point of warning.
+### 2. Dashboard
+A dashboard is available at:
+`http://127.0.0.1:8000/api/v1/monitor?conn1=udp:0.0.0.0:14540&conn2=udp:0.0.0.0:14541&hthresh=7&vthresh=5`
 
 ## Proximity Warning Diagram
 
 ![Drone Proximity Warning](images/diagram.png)
-
-
-## Example Output
-
-## Safe Case:
-`[INFO] Safe. H: 22.45 m, V: 7.12 m` <br>
-
-## Close but safe vertically:
-`[INFO] Drone 1 and Drone 2 close (H: 16.50 m), vertical separation safe` <br>
-
-## Warning Case (action triggered):
-`[WARNING] Drone 1 and Drone 2 too close! H: 12.34 m, V: 3.21 m` <br>
-`[ACTION] Requested Drone 1 to switch to hold mode.` <br>
-`[ACTION] Requested Drone 2 to switch to hold mode.` <br>
 
 ## Notes
 
