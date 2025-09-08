@@ -1,0 +1,15 @@
+services:
+  proximity-api:
+    container_name: drone-proximity
+    build: .
+    ports:
+      - "8000:8000"          # Flask/Gunicorn API
+      - "14540:14540/udp"    # MAVLink Drone 1
+      - "14541:14541/udp"    # MAVLink Drone 2
+    restart: unless-stopped
+    networks:
+      - proximity-net
+
+networks:
+  proximity-net:
+    driver: bridge
