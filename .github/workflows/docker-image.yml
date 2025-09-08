@@ -45,3 +45,13 @@ jobs:
 
       - name: Test Docker image
         run: docker run --rm proximity_warning_api:latest echo "✅ Image built and running"
+
+      - name: Save Docker image to tar
+        run: docker save proximity_warning_api:latest -o proximity_warning_api.tar
+
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: proximity_warning_api_image
+          path: proximity_warning_api.tar
+          retention-days: 7
