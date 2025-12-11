@@ -96,5 +96,4 @@ A dashboard is available at:
 
 ## License
 
-This project is released under the MIT License. Free to use, modify, and distribute with attribution.
-
+This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
